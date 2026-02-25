@@ -26,26 +26,26 @@ The primary goal is to provide accurate, context-aware answers grounded strictly
 
 ```
 PDF
-  → Text Extraction (PyMuPDF)
-  → Chunking with Overlap
-  → Embedding Generation (SentenceTransformers)
-  → Store in Weaviate
-  → Semantic Retrieval (Top-K Similar Chunks)
-  → Prompt Construction with Retrieved Context
-  → Gemini LLM
-  → Grounded Answer in Streamlit UI
+  - Text Extraction (PyMuPDF)
+  - Chunking with Overlap
+  - Embedding Generation (SentenceTransformers)
+  - Store in Weaviate
+  - Semantic Retrieval (Top-K Similar Chunks)
+  - Prompt Construction with Retrieved Context
+  - Gemini LLM
+  - Grounded Answer in Streamlit UI
 ```
 
 ---
 
 ##  Tech Stack
 
-- **PyMuPDF (fitz)** — PDF text extraction
-- **SentenceTransformers (all-MiniLM-L6-v2)** — Embedding generation
-- **Weaviate** — Vector database for semantic search
-- **Google Gemini** — LLM for response generation
-- **Streamlit** — Interactive UI
-- **Python** — Core implementation
+- **PyMuPDF (fitz)** : PDF text extraction
+- **SentenceTransformers (all-MiniLM-L6-v2)** : Embedding generation
+- **Weaviate** : Vector database for semantic search
+- **Google Gemini** : LLM for response generation
+- **Streamlit** : Interactive UI
+- **Python** : Core implementation
 
 ---
 
