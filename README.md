@@ -1,98 +1,111 @@
-# Local-RAG-Pipeline
-```
+# Local RAG Pipeline
+
 An end-to-end Retrieval-Augmented Generation (RAG) system for semantic PDF question answering using vector search and LLM grounding.
 
-This project demonstrates how to build a production-style RAG architecture from scratch using open-source tools and a local vector database.
+This project demonstrates how to build a modular, production-style RAG architecture from scratch using open-source tools and a locally deployed vector database.
 
 ---
 
-## Overview
+##  Overview
 
-This system allows users to:
+This system enables users to:
 
-1. Upload a PDF document
-2. Automatically extract and chunk text
-3. Generate embeddings for each chunk
-4. Store embeddings in Weaviate (vector database)
-5. Perform semantic retrieval
-6. Generate grounded answers using Gemini LLM
-7. Interact through a Streamlit UI
+- Upload a PDF document
+- Extract and chunk text automatically
+- Generate embeddings for each chunk
+- Store embeddings in Weaviate (vector database)
+- Perform semantic (vector) retrieval
+- Generate grounded answers using Gemini
+- Interact via an intuitive Streamlit interface
 
-The goal is to provide accurate, context-aware answers directly grounded in the document content — minimizing hallucination.
-
----
-
-## Architecture Flow
-
-PDF  
-→ Text Extraction (PyMuPDF)  
-→ Chunking with Overlap  
-→ Embedding (SentenceTransformers)  
-→ Store in Weaviate  
-→ Semantic Retrieval (Top-K vector search)  
-→ Prompt Construction  
-→ Gemini LLM  
-→ Grounded Answer  
+The primary goal is to provide accurate, context-aware answers grounded strictly in document content — minimizing hallucination.
 
 ---
 
-## Tech Stack
-
-- **PyMuPDF (fitz)** – PDF text extraction
-- **SentenceTransformers (all-MiniLM-L6-v2)** – Embedding generation
-- **Weaviate** – Vector database for semantic search
-- **Google Gemini** – Large Language Model for response generation
-- **Streamlit** – Interactive UI layer
-- **Python** – Core implementation
-
----
-
-## Project Structure
+##  Architecture Flow
 
 ```
-
-agents/
-├── Splitting.py          # PDF extraction & chunking
-├── Embedding.py          # Vector storage logic
-├── retrieve.py           # Retrieval + LLM grounding
-├── Weaviate_smoketest.py # DB test script
-app_streamlit.py           # Main Streamlit UI
-app_streamlit_min.py       # Minimal UI version
-major.py                   # Full pipeline test script
-
-````
+PDF
+  → Text Extraction (PyMuPDF)
+  → Chunking with Overlap
+  → Embedding Generation (SentenceTransformers)
+  → Store in Weaviate
+  → Semantic Retrieval (Top-K Similar Chunks)
+  → Prompt Construction with Retrieved Context
+  → Gemini LLM
+  → Grounded Answer in Streamlit UI
+```
 
 ---
 
-## Setup Instructions
+##  Tech Stack
 
-### 1. Clone the repository
+- **PyMuPDF (fitz)** — PDF text extraction
+- **SentenceTransformers (all-MiniLM-L6-v2)** — Embedding generation
+- **Weaviate** — Vector database for semantic search
+- **Google Gemini** — LLM for response generation
+- **Streamlit** — Interactive UI
+- **Python** — Core implementation
+
+---
+
+##  Project Structure
+
+```
+.
+├── agents/
+│   ├── Embedding.py
+│   ├── Splitting.py
+│   ├── retrieve.py
+│   ├── Weaviate_smoketest.py
+│   └── __init__.py
+├── app_streamlit.py
+├── app_streamlit_min.py
+├── major.py
+└── README.md
+```
+
+---
+
+##  Setup Instructions
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/LakshmiNishevitha/Local-RAG-Pipeline.git
 cd Local-RAG-Pipeline
-````
+```
 
-### 2️. Create virtual environment
+### 2. Create a Virtual Environment
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3️. Install dependencies
+### 3. Install Dependencies
+
+If you have `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-If you don't have requirements.txt yet, generate it:
+If not, install manually:
+
+```bash
+pip install streamlit python-dotenv sentence-transformers weaviate-client pymupdf google-generativeai requests
+```
+
+(Optional) Generate requirements file:
 
 ```bash
 pip freeze > requirements.txt
 ```
 
-### 4️. Start Weaviate (Docker)
+---
+
+### 4. Start Weaviate (Docker Required)
 
 ```bash
 docker run -p 8080:8080 \
@@ -103,9 +116,11 @@ docker run -p 8080:8080 \
   semitechnologies/weaviate:1.24.10
 ```
 
-### 5️. Add Gemini API Key
+---
 
-Create a `.env` file:
+### 5. Add Gemini API Key
+
+Create a `.env` file in the root directory:
 
 ```
 GEMINI_API_KEY=your_api_key_here
@@ -113,50 +128,45 @@ GEMINI_API_KEY=your_api_key_here
 
  Never commit `.env` to GitHub.
 
-### 6️. Run Streamlit App
+---
+
+### 6. Run the Streamlit Application
 
 ```bash
 streamlit run app_streamlit.py
 ```
 
+The app will open in your browser.
+
 ---
 
-## How Retrieval Works
+##  How Retrieval Works
 
-1. User question is embedded using SentenceTransformers.
-2. Weaviate performs nearest-neighbor vector search.
-3. Top relevant chunks are retrieved.
-4. A grounded prompt is constructed.
-5. Gemini generates an answer using only retrieved context.
+1. The user question is converted into a vector embedding.
+2. Weaviate performs nearest-neighbor search on stored document chunks.
+3. Top-K relevant chunks are retrieved.
+4. A grounded prompt is constructed using only retrieved context.
+5. Gemini generates a response strictly based on that context.
 
-This keeps responses anchored to the actual document.
+This ensures responses are anchored to actual document content.
 
 ---
 
 ##  Key Features
 
-* Semantic search (not keyword matching)
-* Chunk overlap for contextual continuity
-* LLM grounding to reduce hallucination
-* Local vector database deployment
-* Interactive UI for non-technical users
-* Modular architecture (splitting, embedding, retrieval separated)
+- Semantic vector search (not keyword matching)
+- Chunk overlap for better contextual continuity
+- Local vector database deployment
+- LLM grounding to reduce hallucinations
+- Modular pipeline architecture (split → embed → retrieve)
+- Streamlit UI for interactive demonstrations
 
 ---
 
 ##  Disclaimer
 
 This project was built independently for educational and training purposes.
-No proprietary code, data, or confidential information from any employer is included.
 
----
-
-##  Future Improvements
-
-* Metadata-based filtering (doc_id, chunk_index)
-* Persistent UUID handling for deduplication
-* Source citation display in UI
-* Hybrid search (keyword + vector)
-* Evaluation metrics for retrieval quality
+No proprietary code, confidential data, or employer-specific information is included.
 
 ---
