@@ -82,7 +82,7 @@ st.sidebar.markdown("---")
 st.sidebar.caption("Gemini key is read via `.env` by your agents. "
                    "Add `GEMINI_API_KEY=...` to `new/.env`.")
 
-st.title("📄 Local RAG with Streamlit (PDF → Weaviate → Gemini)")
+st.title(" Local RAG with Streamlit (PDF → Weaviate → Gemini)")
 
 tab_index, tab_query = st.tabs(["Index PDF", "Ask Questions"])
 
@@ -140,13 +140,13 @@ with tab_query:
 
                     if not used_docs:
                         hits = near_vector_search(question, top_k=top_k)
-                        st.markdown("### 🔎 Retrieved Chunks")
+                        st.markdown("### Retrieved Chunks")
                         for i, h in enumerate(hits, start=1):
                             with st.expander(f"Chunk {i} • distance={h['distance']:.4f} • "
                                              f"doc_id={h.get('doc_id')} • idx={h.get('chunk_index')}"):
                                 st.write(h["content"])
                     else:
-                        st.markdown("### 🔎 Retrieved Chunks (from QueryAgent)")
+                        st.markdown("### Retrieved Chunks (from QueryAgent)")
                         for i, d in enumerate(used_docs[:top_k], start=1):
                             with st.expander(f"Chunk {i}"):
                                 st.write(d)
